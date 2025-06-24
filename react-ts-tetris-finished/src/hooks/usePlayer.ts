@@ -1,7 +1,10 @@
-import React from 'react';
-import { STAGE_WIDTH } from '../setup';
-import { isColliding, randomTetromino } from '../gameHelpers';
-import { STAGE } from './useStage';
+import React, { useState } from "react";
+import { OneTetrominoType, STAGE_WIDTH, TetrominosType } from "../setup";
+import { isColliding, randomTetromino } from "../gameHelpers";
+import { STAGE } from "./useStage";
+import { useDispatch, useSelector } from "react-redux";
+import { setNextT } from "../NextTSlice";
+import { RootState, store } from "../store";
 
 export type PLAYER = {
   pos: {
@@ -12,14 +15,16 @@ export type PLAYER = {
   collided: boolean;
 };
 
-export const usePlayer = () => {
+export const usePlayer = (nextT: OneTetrominoType) => {
   const [player, setPlayer] = React.useState({} as PLAYER);
+  //const [nextT, setNextT] = useState<OneTetrominoType | undefined>(undefined);
 
-  const rotate = (matrix: PLAYER['tetromino']) => {
+  const dispatch = useDispatch();
+  const rotate = (matrix: PLAYER["tetromino"]) => {
     // Make the rows to become cols (transpose)
-    const mtrx = matrix.map((_, i) => matrix.map(column => column[i]));
+    const mtrx = matrix.map((_, i) => matrix.map((column) => column[i]));
     // Reverse each row to get a rotated matrix
-    return mtrx.map(row => row.reverse());
+    return mtrx.map((row) => row.reverse());
   };
 
   const playerRotate = (stage: STAGE): void => {
@@ -32,7 +37,7 @@ export const usePlayer = () => {
     while (isColliding(clonedPlayer, stage, { x: 0, y: 0 })) {
       clonedPlayer.pos.x += offset;
       offset = -(offset + (offset > 0 ? 1 : -1));
-      
+
       if (offset > clonedPlayer.tetromino[0].length) {
         clonedPlayer.pos.x = posX;
         return;
@@ -42,23 +47,31 @@ export const usePlayer = () => {
     setPlayer(clonedPlayer);
   };
 
-  const updatePlayerPos = ({ x, y, collided }: { x: number; y: number; collided: boolean }): void => {
-    setPlayer(prev => ({
+  const updatePlayerPos = ({
+    x,
+    y,
+    collided,
+  }: {
+    x: number;
+    y: number;
+    collided: boolean;
+  }): void => {
+    setPlayer((prev) => ({
       ...prev,
       pos: { x: (prev.pos.x += x), y: (prev.pos.y += y) },
-      collided
+      collided,
     }));
   };
 
-  const resetPlayer = React.useCallback(
-    (): void =>
-      setPlayer({
-        pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
-        tetromino: randomTetromino().shape,
-        collided: false
-      }),
-    []
-  );
+  const resetPlayer = React.useCallback((): void => {
+    const _nxt = store.getState().nextT.value as OneTetrominoType;
+    setPlayer({
+      pos: { x: STAGE_WIDTH / 2 - 2, y: 0 },
+      tetromino: _nxt.shape, //nextT.shape,
+      collided: false,
+    });
+    dispatch(setNextT());
+  }, []);
 
   return { player, updatePlayerPos, resetPlayer, playerRotate };
 };

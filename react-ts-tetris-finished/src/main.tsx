@@ -1,8 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { createGlobalStyle } from 'styled-components';
-import App from './App';
-import bgImage from './img/bg.jpg';
+import React from "react";
+import ReactDOM from "react-dom";
+import { createGlobalStyle } from "styled-components";
+import App from "./App";
+import bgImage from "./img/bg.jpg";
+import { Provider } from "react-redux";
+import { configureStore, createStore } from "@reduxjs/toolkit";
+import { store } from "./store";
 
 const GlobalStyles = createGlobalStyle`
   body {
@@ -17,7 +20,9 @@ const GlobalStyles = createGlobalStyle`
 ReactDOM.render(
   <>
     <GlobalStyles />
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </>,
-  document.getElementById('root')
+  document.getElementById("root")
 );

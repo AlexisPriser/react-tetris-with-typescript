@@ -1,19 +1,25 @@
-import React from 'react';
-import { createStage, isColliding } from './gameHelpers';
+import React, { useEffect } from "react";
+import { createStage, isColliding } from "./gameHelpers";
 
 // Custom hooks
-import { useInterval } from './hooks/useInterval';
-import { usePlayer } from './hooks/usePlayer';
-import { useStage } from './hooks/useStage';
-import { useGameStatus } from './hooks/useGameStatus';
+import { useInterval } from "./hooks/useInterval";
+import { usePlayer } from "./hooks/usePlayer";
+import { useStage } from "./hooks/useStage";
+import { useGameStatus } from "./hooks/useGameStatus";
 
 // Components
-import Stage from './components/Stage/Stage';
-import Display from './components/Display/Display';
-import StartButton from './components/StartButton/StartButton';
+import Stage from "./components/Stage/Stage";
+import Display from "./components/Display/Display";
+import StartButton from "./components/StartButton/StartButton";
 
 // Styles
-import { StyledTetrisWrapper, StyledTetris } from './App.styles';
+import NextT from "./components/NextT/NextT";
+import { useDispatch, useSelector } from "react-redux";
+import { OneTetrominoType } from "./setup";
+import { RootState } from "./store";
+import Pause from "./components/Pause";
+import { setReset } from "./PauseSlice";
+import styled from "styled-components";
 
 const App: React.FC = () => {
   const [dropTime, setDroptime] = React.useState<null | number>(null);
@@ -21,9 +27,18 @@ const App: React.FC = () => {
 
   const gameArea = React.useRef<HTMLDivElement>(null);
 
-  const { player, updatePlayerPos, resetPlayer, playerRotate } = usePlayer();
+  const dispatch = useDispatch();
+  const nextT = useSelector((state: RootState) => {
+    return state.nextT.value;
+  }) as OneTetrominoType;
+
+  const pause = useSelector((state: RootState) => state.pause);
+
+  const { player, updatePlayerPos, resetPlayer, playerRotate } =
+    usePlayer(nextT);
   const { stage, setStage, rowsCleared } = useStage(player, resetPlayer);
-  const { score, setScore, rows, setRows, level, setLevel } = useGameStatus(rowsCleared);
+  const { score, setScore, rows, setRows, level, setLevel } =
+    useGameStatus(rowsCleared);
 
   const movePlayer = (dir: number) => {
     if (!isColliding(player, stage, { x: dir, y: 0 })) {
@@ -53,8 +68,14 @@ const App: React.FC = () => {
     setGameOver(false);
   };
 
-  const move = ({ keyCode, repeat }: { keyCode: number; repeat: boolean }): void => {
-    if (!gameOver) {
+  const move = ({
+    keyCode,
+    repeat,
+  }: {
+    keyCode: number;
+    repeat: boolean;
+  }): void => {
+    if (!gameOver && !pause.pause) {
       if (keyCode === 37) {
         movePlayer(-1);
       } else if (keyCode === 39) {
@@ -72,7 +93,7 @@ const App: React.FC = () => {
   const drop = (): void => {
     // Increase level when player has cleared 10 rows
     if (rows > level * 10) {
-      setLevel(prev => prev + 1);
+      setLevel((prev) => prev + 1);
       // Also increase speed
       setDroptime(1000 / level + 200);
     }
@@ -82,7 +103,7 @@ const App: React.FC = () => {
     } else {
       // Game over!
       if (player.pos.y < 1) {
-        console.log('Game over!');
+        //console.log("Game over!");
         setGameOver(true);
         setDroptime(null);
       }
@@ -91,30 +112,129 @@ const App: React.FC = () => {
   };
 
   useInterval(() => {
-    drop();
+    if (!pause.pause) {
+      drop();
+    }
   }, dropTime);
 
+  useEffect(() => {
+    if (pause.reset) {
+      handleStartGame();
+      dispatch(setReset());
+    }
+  }, [pause.reset]);
+
   return (
-    <StyledTetrisWrapper role='button' tabIndex={0} onKeyDown={move} onKeyUp={keyUp} ref={gameArea}>
+    <StyledTetrisWrapper
+      role="button"
+      tabIndex={0}
+      onKeyDown={move}
+      onKeyUp={keyUp}
+      ref={gameArea}
+    >
       <StyledTetris>
-        <div className='display'>
+        <div className="display">
           {gameOver ? (
             <>
-              <Display gameOver={gameOver} text='Game Over!' />
+              <Display gameOver={gameOver} text="Game Over!" />
               <StartButton callback={handleStartGame} />
             </>
           ) : (
             <>
-              <Display text={`Score: ${score}`} />
-              <Display text={`Rows: ${rows}`} />
-              <Display text={`Level: ${level}`} />
+              <Display text={`Score: ${score}\nLevel: ${level}`} />
+              <Pause />
+              <NextT />
             </>
           )}
         </div>
-        <Stage stage={stage} />
+        <StageControlWrapper>
+          <StyledControl>
+            <Up />
+            <RL_Wrapper>
+              <Left />
+              <Right />
+            </RL_Wrapper>
+            <Down />
+          </StyledControl>
+
+          <Stage stage={stage} />
+        </StageControlWrapper>
       </StyledTetris>
     </StyledTetrisWrapper>
   );
 };
+
+const StyledTetrisWrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  outline: none;
+`;
+
+const StyledTetris = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  height: 100%;
+  margin: 0 auto;
+
+  .display {
+    display: flex;
+    justify-content: space-between;
+    width: 380px;
+  }
+`;
+
+const StageControlWrapper = styled.div`
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  -moz-box-align: center;
+  align-items: center;
+  padding: 40px 0px;
+  margin: 0px auto;
+`;
+
+//                              CONTROLS//
+
+const StyledControl = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background: red;
+`;
+
+const Up = styled.div`
+  width: 100%;
+  height: 45%;
+  background: green;
+`;
+
+const RL_Wrapper = styled.div`
+  left: 0;
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: space-between;
+`;
+const Left = styled.div`
+  width: 100%;
+  background: blue;
+`;
+const Right = styled.div`
+  width: 100%;
+  background: cyan;
+`;
+const Down = styled.div`
+  bottom: 0;
+  width: 100%;
+  height: 25%;
+  background: yellow;
+`;
 
 export default App;
