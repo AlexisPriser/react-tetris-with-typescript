@@ -9,7 +9,7 @@ const NextTSlice = createSlice({
   reducers: {
     setNextT: (state) => {
       const randT = randomTetromino();
-      console.log("setNextT called", randT.color);
+      //console.log("setNextT called", randT.color);
       return { value: randT };
     },
   },

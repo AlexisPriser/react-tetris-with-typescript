@@ -12,7 +12,7 @@ const Pause = () => {
   const pause = useSelector((state: RootState) => state.pause.pause);
   const dispatch = useDispatch();
   const [resetCount, setResetCount] = React.useState(0);
-  const resetCountMax = 30;
+  const resetCountMax = 1000;
 
   const changeTimer: React.MutableRefObject<any> = useRef(null);
 
@@ -24,12 +24,11 @@ const Pause = () => {
   const increment = () => {
     changeTimer.current = setInterval(
       () => setResetCount((prev) => prev + 1),
-      35
+      1
     );
   };
 
   useEffect(() => {
-    //console.log("resetCount", resetCount);
     if (resetCount >= resetCountMax) {
       dispatch(setReset());
       setResetCount(0);
@@ -47,7 +46,7 @@ const Pause = () => {
       <StyledContainer>
         <p>hold to reset</p>
         <img
-          src={resetCount > 10 ? refresh_svg : pause ? play_svg : pause_svg}
+          src={resetCount > 350 ? refresh_svg : pause ? play_svg : pause_svg}
           alt={pause ? "play" : "pause"}
           width="70"
           height="70"

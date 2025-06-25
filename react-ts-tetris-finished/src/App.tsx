@@ -20,6 +20,7 @@ import { RootState } from "./store";
 import Pause from "./components/Pause";
 import { setReset } from "./PauseSlice";
 import styled from "styled-components";
+import DirTouch from "./components/DirTouch";
 
 const App: React.FC = () => {
   const [dropTime, setDroptime] = React.useState<null | number>(null);
@@ -55,6 +56,12 @@ const App: React.FC = () => {
     }
   };
 
+  const DownEnd = (): void => {
+    if (!gameOver) {
+      setDroptime(1000 / level + 200);
+    }
+  };
+
   const handleStartGame = (): void => {
     // Need to focus the window with the key events on start
     if (gameArea.current) gameArea.current.focus();
@@ -71,20 +78,36 @@ const App: React.FC = () => {
   const move = ({
     keyCode,
     repeat,
+    dir,
   }: {
-    keyCode: number;
-    repeat: boolean;
+    keyCode?: number;
+    repeat?: boolean;
+    dir?: string;
   }): void => {
     if (!gameOver && !pause.pause) {
-      if (keyCode === 37) {
+      if (keyCode === 37 || dir === "left") {
         movePlayer(-1);
-      } else if (keyCode === 39) {
+      } else if (keyCode === 39 || dir === "right") {
         movePlayer(1);
-      } else if (keyCode === 40) {
+      } else if (keyCode === 40 || dir === "down") {
         // Just call once
         if (repeat) return;
         setDroptime(30);
-      } else if (keyCode === 38) {
+      } else if (keyCode === 38 || dir === "up") {
+        playerRotate(stage);
+      }
+    }
+  };
+
+  const touchMove = (direction: string): void => {
+    if (!gameOver && !pause.pause) {
+      if (direction === "left") {
+        movePlayer(-1);
+      } else if (direction === "right") {
+        movePlayer(1);
+      } else if (direction === "down") {
+        setDroptime(30);
+      } else if (direction === "up") {
         playerRotate(stage);
       }
     }
@@ -149,12 +172,12 @@ const App: React.FC = () => {
         </div>
         <StageControlWrapper>
           <StyledControl>
-            <Up />
+            <DirTouch dir="up" touchMove={move} touchUp={keyUp} />
             <RL_Wrapper>
-              <Left />
-              <Right />
+              <DirTouch dir="left" touchMove={move} touchUp={keyUp} />
+              <DirTouch dir="right" touchMove={move} touchUp={keyUp} />
             </RL_Wrapper>
-            <Down />
+            <DirTouch dir="down" touchMove={move} touchUp={keyUp} />
           </StyledControl>
 
           <Stage stage={stage} />
@@ -209,32 +232,12 @@ const StyledControl = styled.div`
   background: red;
 `;
 
-const Up = styled.div`
-  width: 100%;
-  height: 45%;
-  background: green;
-`;
-
 const RL_Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 30%;
   display: flex;
   justify-content: space-between;
-`;
-const Left = styled.div`
-  width: 100%;
-  background: blue;
-`;
-const Right = styled.div`
-  width: 100%;
-  background: cyan;
-`;
-const Down = styled.div`
-  bottom: 0;
-  width: 100%;
-  height: 25%;
-  background: yellow;
 `;
 
 export default App;
