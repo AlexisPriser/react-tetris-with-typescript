@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import NextTSlice from "./NextTSlice";
 import PauseSlice from "./PauseSlice";
+import ShowCtrlSlice from "./ShowCtrlSlice";
 // ...
 
 export const store = configureStore({
   reducer: {
     nextT: NextTSlice,
     pause: PauseSlice,
+    showCtrl: ShowCtrlSlice,
   },
 });
 

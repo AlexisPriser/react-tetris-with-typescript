@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
+import ShowCtrlSlice from "../ShowCtrlSlice";
+import { RootState } from "../store";
+import { useSelector } from "react-redux";
 
 type Props = {
   dir: string;
@@ -19,6 +22,8 @@ const DirTouch: React.FC<Props> = ({ dir, touchMove, touchUp }) => {
   const [Count, setCount] = React.useState(0);
   const CountMax = 10;
   const CountRepeat = 2;
+
+  const show = useSelector((state: RootState) => state.showCtrl.show);
 
   const changeTimer: React.MutableRefObject<any> = useRef(null);
 
@@ -43,13 +48,16 @@ const DirTouch: React.FC<Props> = ({ dir, touchMove, touchUp }) => {
   return (
     <ST_DirTouch
       dir={dir}
+      show={show}
       onMouseUp={timeoutClearUp}
       onMouseLeave={timeoutClearUp}
       onMouseDown={() => {
         touchMove({ keyCode: undefined, repeat: false, dir });
         increment();
       }}
-    />
+    >
+      {dir}
+    </ST_DirTouch>
   );
 };
 
@@ -73,9 +81,9 @@ const handleDirColor = (dir: string) => {
     case "up":
       return "green";
     case "left":
-      return "blue";
+      return "red";
     case "right":
-      return "cyan";
+      return "blue";
     case "down":
       return "yellow";
     default:
@@ -83,10 +91,14 @@ const handleDirColor = (dir: string) => {
   }
 };
 
-const ST_DirTouch = styled.div<{ dir: string }>`
+const ST_DirTouch = styled.div<{ dir: string; show: boolean }>`
   width: 100%;
   height: ${(props) => handleDirHeight(props.dir)};
   background: ${(props) => handleDirColor(props.dir)};
+  text-align: center;
+  align-content: center;
+  font-size: xxx-large;
+  opacity: ${(props) => (props.show ? 1 : 0)};
 `;
 
 export default DirTouch;

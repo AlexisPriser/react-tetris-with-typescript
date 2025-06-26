@@ -22,6 +22,10 @@ import { setReset } from "./PauseSlice";
 import styled from "styled-components";
 import DirTouch from "./components/DirTouch";
 
+import ControllerSVG from "./img/controller.svg";
+import Control from "./components/Control";
+import { setShow } from "./ShowCtrlSlice";
+
 const App: React.FC = () => {
   const [dropTime, setDroptime] = React.useState<null | number>(null);
   const [gameOver, setGameOver] = React.useState(true);
@@ -156,6 +160,21 @@ const App: React.FC = () => {
       ref={gameArea}
     >
       <StyledTetris>
+        <StyledControlIcon
+          src={ControllerSVG}
+          alt="controller"
+          width="60"
+          height="60"
+          onMouseDown={() => {
+            dispatch(setShow(true));
+          }}
+          onMouseUp={() => {
+            dispatch(setShow(false));
+          }}
+          onMouseLeave={() => {
+            dispatch(setShow(false));
+          }}
+        />
         <div className="display">
           {gameOver ? (
             <>
@@ -171,14 +190,7 @@ const App: React.FC = () => {
           )}
         </div>
         <StageControlWrapper>
-          <StyledControl>
-            <DirTouch dir="up" touchMove={move} touchUp={keyUp} />
-            <RL_Wrapper>
-              <DirTouch dir="left" touchMove={move} touchUp={keyUp} />
-              <DirTouch dir="right" touchMove={move} touchUp={keyUp} />
-            </RL_Wrapper>
-            <DirTouch dir="down" touchMove={move} touchUp={keyUp} />
-          </StyledControl>
+          <Control touchMove={move} touchUp={keyUp} />
 
           <Stage stage={stage} />
         </StageControlWrapper>
@@ -194,11 +206,15 @@ const StyledTetrisWrapper = styled.div`
   outline: none;
 `;
 
+const StyledControlIcon = styled.img`
+  align-self: end;
+`;
+
 const StyledTetris = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 0;
+  //padding: 60px 0;
   height: 100%;
   margin: 0 auto;
 
@@ -223,21 +239,5 @@ const StageControlWrapper = styled.div`
 `;
 
 //                              CONTROLS//
-
-const StyledControl = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0.5;
-  background: red;
-`;
-
-const RL_Wrapper = styled.div`
-  left: 0;
-  width: 100%;
-  height: 30%;
-  display: flex;
-  justify-content: space-between;
-`;
 
 export default App;
