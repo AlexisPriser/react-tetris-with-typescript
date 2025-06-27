@@ -12,7 +12,8 @@ const Pause = () => {
   const pause = useSelector((state: RootState) => state.pause.pause);
   const dispatch = useDispatch();
   const [resetCount, setResetCount] = React.useState(0);
-  const resetCountMax = 1000;
+  const resetCountMax = 300;
+  const icon_reset_threachold = resetCountMax * 0.3;
 
   const changeTimer: React.MutableRefObject<any> = useRef(null);
 
@@ -46,7 +47,13 @@ const Pause = () => {
       <StyledContainer>
         <p>hold to reset</p>
         <img
-          src={resetCount > 350 ? refresh_svg : pause ? play_svg : pause_svg}
+          src={
+            resetCount > icon_reset_threachold
+              ? refresh_svg
+              : pause
+              ? play_svg
+              : pause_svg
+          }
           alt={pause ? "play" : "pause"}
           width="70"
           height="70"
