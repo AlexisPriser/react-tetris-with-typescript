@@ -55,8 +55,8 @@ const Pause = () => {
               : pause_svg
           }
           alt={pause ? "play" : "pause"}
-          width="70"
-          height="70"
+          width="60"
+          height="60"
         />
       </StyledContainer>
     </StyledPause>
@@ -66,9 +66,6 @@ const Pause = () => {
 const StyledPause = styled.div<{ gameOver?: boolean }>`
   position: relative;
   box-sizing: border-box;
-
-  margin: 0 0 20px 0;
-
   border: 2px solid #777;
   min-height: 20px;
   width: 120px;

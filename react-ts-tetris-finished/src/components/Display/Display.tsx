@@ -14,7 +14,6 @@ const StyledDisplay = styled.div<{ gameOver?: boolean }>`
   box-sizing: border-box;
   display: flex;
   align-items: space-between;
-  margin: 0 0 20px 0;
   padding: 20px;
   border: 2px solid #777;
   min-height: 20px;

@@ -48,8 +48,8 @@ Error generating stack: `+i.message+`
   border-left-color: rgba(${e=>e.color}, 0.3);
 `,Ov=({type:e})=>T.createElement(zv,{type:e,color:cp[e].color});var Dp=T.memo(Ov);const Iv=({stage:e})=>T.createElement($v,null,e.map(t=>t.map((n,r)=>T.createElement(Dp,{key:r,type:n[0]})))),$v=he.div`
   display: grid;
-  grid-template-columns: repeat(${Ms}, 30px);
-  grid-template-rows: repeat(${ap}, 30px);
+  grid-template-columns: repeat(${Ms}, minmax(3vh, 1fr));
+  grid-template-rows: repeat(${ap}, minmax(3vh, 1fr));
   grid-gap: 1px;
   border: 1px solid #777;
   background: #222;
@@ -57,7 +57,6 @@ Error generating stack: `+i.message+`
   box-sizing: border-box;
   display: flex;
   align-items: space-between;
-  margin: 0 0 20px 0;
   padding: 20px;
   border: 2px solid #777;
   min-height: 20px;
@@ -84,17 +83,14 @@ Error generating stack: `+i.message+`
 `,Mv=({callback:e})=>T.createElement(Dv,{onClick:e},"Start Game"),Av=()=>{const e=Wr(t=>t.nextT.value);return T.createElement(Fv,{$width:e.shape[0].length,$height:e.shape.length,$maxWidth:ny},e.shape.map(t=>t.map((n,r)=>T.createElement(Dp,{key:r,type:n}))))},Fv=he.div`
   display: grid;
   height: ${e=>e.$maxWidth?`${e.$maxWidth*31}px`:"auto"};
-  grid-template-columns: repeat(${e=>e.$width}, 30px);
-  grid-template-rows: repeat(${e=>e.$height}, 30px);
+  grid-template-columns: repeat(${e=>e.$width}, minmax(3vh, 20px));
+  grid-template-rows: repeat(${e=>e.$height}, minmax(3vh, 20px));
   grid-gap: 1px;
   border: 1px solid #777;
   background: #222;
-`;var jv="/assets/pause.195c18b5.svg",Uv="/assets/play.0269e495.svg",Bv="/assets/refresh.7fb47c5e.svg";const Wv=()=>{const e=Wr(a=>a.pause.pause),t=Fs(),[n,r]=T.useState(0),o=300,i=o*.3,l=U.exports.useRef(null),u=()=>{r(0),clearInterval(l.current)},s=()=>{l.current=setInterval(()=>r(a=>a+1),1)};return U.exports.useEffect(()=>{n>=o&&(t(Ip()),r(0))},[n]),T.createElement(Hv,{onClick:()=>t(Ev()),onMouseUp:u,onMouseLeave:u,onMouseDown:s},T.createElement(Qv,{$coef:n/o}),T.createElement(Vv,null,T.createElement("p",null,"hold to reset"),T.createElement("img",{src:n>i?Bv:e?Uv:jv,alt:e?"play":"pause",width:"70",height:"70"})))},Hv=he.div`
+`;var jv="/assets/pause.195c18b5.svg",Uv="/assets/play.0269e495.svg",Bv="/assets/refresh.7fb47c5e.svg";const Wv=()=>{const e=Wr(a=>a.pause.pause),t=Fs(),[n,r]=T.useState(0),o=300,i=o*.3,l=U.exports.useRef(null),u=()=>{r(0),clearInterval(l.current)},s=()=>{l.current=setInterval(()=>r(a=>a+1),1)};return U.exports.useEffect(()=>{n>=o&&(t(Ip()),r(0))},[n]),T.createElement(Hv,{onClick:()=>t(Ev()),onMouseUp:u,onMouseLeave:u,onMouseDown:s},T.createElement(Qv,{$coef:n/o}),T.createElement(Vv,null,T.createElement("p",null,"hold to reset"),T.createElement("img",{src:n>i?Bv:e?Uv:jv,alt:e?"play":"pause",width:"60",height:"60"})))},Hv=he.div`
   position: relative;
   box-sizing: border-box;
-
-  margin: 0 0 20px 0;
-
   border: 2px solid #777;
   min-height: 20px;
   width: 120px;

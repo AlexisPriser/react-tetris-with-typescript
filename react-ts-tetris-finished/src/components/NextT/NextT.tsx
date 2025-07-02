@@ -39,8 +39,8 @@ export const StyledNextT = styled.div<{
   display: grid;
   height: ${(props) =>
     props.$maxWidth ? `${props.$maxWidth * 31}px` : "auto"};
-  grid-template-columns: repeat(${(props) => props.$width}, 30px);
-  grid-template-rows: repeat(${(props) => props.$height}, 30px);
+  grid-template-columns: repeat(${(props) => props.$width}, minmax(3vh, 20px));
+  grid-template-rows: repeat(${(props) => props.$height}, minmax(3vh, 20px));
   grid-gap: 1px;
   border: 1px solid #777;
   background: #222;
