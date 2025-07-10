@@ -42,6 +42,9 @@ const Pause = () => {
       onMouseUp={timeoutClearUp}
       onMouseLeave={timeoutClearUp}
       onMouseDown={increment}
+      onTouchEnd={timeoutClearUp}
+      onTouchCancel={timeoutClearUp}
+      onTouchStart={increment}
     >
       <StyledLoad $coef={resetCount / resetCountMax} />
       <StyledContainer>

@@ -41,6 +41,7 @@ const App: React.FC = () => {
 
   const { player, updatePlayerPos, resetPlayer, playerRotate } =
     usePlayer(nextT);
+
   const { stage, setStage, rowsCleared } = useStage(player, resetPlayer);
   const { score, setScore, rows, setRows, level, setLevel } =
     useGameStatus(rowsCleared);
@@ -62,9 +63,14 @@ const App: React.FC = () => {
 
   const DownEnd = (): void => {
     if (!gameOver) {
+      //console.log("DownEnd");
       setDroptime(1000 / level + 200);
     }
   };
+
+  useEffect(() => {
+    DownEnd();
+  }, [nextT]);
 
   const handleStartGame = (): void => {
     // Need to focus the window with the key events on start
@@ -190,7 +196,7 @@ const App: React.FC = () => {
           )}
         </div>
         <StageControlWrapper>
-          <Control touchMove={move} touchUp={keyUp} />
+          <Control touchMove={move} touchUp={DownEnd} />
 
           <Stage stage={stage} />
         </StageControlWrapper>

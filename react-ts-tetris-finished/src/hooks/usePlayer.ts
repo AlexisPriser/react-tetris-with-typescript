@@ -70,6 +70,7 @@ export const usePlayer = (nextT: OneTetrominoType) => {
       tetromino: _nxt.shape, //nextT.shape,
       collided: false,
     });
+    //downEnd();
     dispatch(setNextT());
   }, []);
 
