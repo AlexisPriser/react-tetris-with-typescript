@@ -18,18 +18,16 @@ type Props = {
 };
 
 const Control: React.FC<Props> = ({ touchMove, touchUp }) => {
-  return (
-    <StyledControl>
-      {/*}
+  {
+    /*}
       <DirTouch dir="up" touchMove={touchMove} touchUp={touchUp} />
       <RL_Wrapper>
         <DirTouch dir="left" touchMove={touchMove} touchUp={touchUp} />
         <DirTouch dir="right" touchMove={touchMove} touchUp={touchUp} />
       </RL_Wrapper>
-      <DirTouch dir="down" touchMove={touchMove} touchUp={touchUp} />*/}
-      <Joystick touchMove={touchMove} touchUp={touchUp} />
-    </StyledControl>
-  );
+      <DirTouch dir="down" touchMove={touchMove} touchUp={touchUp} />*/
+  }
+  return <Joystick touchMove={touchMove} touchUp={touchUp} />;
 };
 
 const StyledControl = styled.div`

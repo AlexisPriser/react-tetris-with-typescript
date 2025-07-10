@@ -166,6 +166,7 @@ const App: React.FC = () => {
       ref={gameArea}
     >
       <StyledTetris>
+        {/*}
         <StyledControlIcon
           src={ControllerSVG}
           alt="controller"
@@ -180,7 +181,7 @@ const App: React.FC = () => {
           onMouseLeave={() => {
             dispatch(setShow(false));
           }}
-        />
+        />*/}
         <div className="display">
           {gameOver ? (
             <>
