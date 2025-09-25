@@ -185,6 +185,7 @@ const App: React.FC = () => {
         <div className="display">
           {gameOver ? (
             <>
+              <Display text={`Score: ${score}\nLevel: ${level}`} />
               <Display gameOver={gameOver} text="Game Over!" />
               <StartButton callback={handleStartGame} />
             </>
